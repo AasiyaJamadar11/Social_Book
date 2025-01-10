@@ -15,3 +15,9 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class User(AbstractUser):
+    public_visibility = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.username
