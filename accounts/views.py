@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
+from .models import User
 
 def register(request):
     if request.method == 'POST':
@@ -26,3 +27,9 @@ def user_login(request):
         else:
             return HttpResponse("Invalid credentials.")
     return render(request, 'accounts/login.html')
+
+def authors_and_sellers(request):
+    # Filter users who have opted for public visibility
+    users = User.objects.filter(public_visibility=True)
+    
+    return render(request, 'accounts/authors_and_sellers.html', {'users': users})
