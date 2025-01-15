@@ -21,7 +21,7 @@ class CustomUser(AbstractUser):
     
 
 class UploadedFile(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255)
     file = models.FileField(upload_to='uploads/', null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, null=True)
     description = models.TextField(blank=True)

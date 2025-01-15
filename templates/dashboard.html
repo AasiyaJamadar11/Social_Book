@@ -31,6 +31,7 @@
         gtag('js', new Date());
         gtag('config', 'UA-119386393-1');
     </script>
+
     <style>
         /* General layout adjustments */
         * {
@@ -39,41 +40,35 @@
             padding: 0;
         }
 
-        /* Ensure body doesn't overlap header */
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
         }
 
-        /* Full width for header */
+        /* Header styles */
         .header {
             width: 100%;
             padding: 20px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             background-color: #fff;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: relative;
-            z-index: 10; /* Keep header above content */
+            z-index: 10;
         }
 
-        /* Main container adjustments */
+        /* Main container styling */
         .main-container {
-            width: 100%;
+            padding: 30px 20px;
             max-width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-            padding-top: 30px; /* Ensure space for the header */
         }
 
-        /* Card box layout */
+        /* Card box styles */
         .card-box {
             width: 100%;
             padding: 20px;
-            box-sizing: border-box;
             border: 1px solid #f1f1f1;
             border-radius: 8px;
             background-color: #fff;
@@ -86,6 +81,7 @@
             color: #333;
         }
 
+        /* Upload Book Form Styles */
         .form-group label {
             font-size: 1.1rem;
             font-weight: 600;
@@ -131,7 +127,7 @@
             }
         }
 
-        /* Footer adjustments */
+        /* Footer styles */
         .footer-wrap {
             width: 100%;
             padding: 10px;
@@ -140,25 +136,84 @@
             border-radius: 8px;
             margin-top: 30px;
         }
+
+        /* Book list styles */
+        .book-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .book-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .book-item:hover {
+            background-color: #f1f1f1;
+        }
+
+        .book-title {
+            font-size: 1.2em;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .book-description {
+            font-size: 1em;
+            color: #555;
+        }
+
+        .book-meta {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .book-visibility, .book-file {
+            display: block;
+            margin-top: 5px;
+        }
+
+        .book-file a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .book-file a:hover {
+            text-decoration: underline;
+        }
+
+        .no-books {
+            font-size: 1.2em;
+            color: #888;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
     <!-- Header -->
     <div class="header">
-        <div class="header-left">
-            <!-- Logo or Branding can go here -->
-        </div>
+       <div class="header-left" style="padding-left: 20px; padding-bottom: 20px;">
+    <!-- Library Name (Logo) Section -->
+    <a href="/" class="logo">
+        <h1 style="color:#1b00ff; font-size: 24px; font-weight: bold; text-transform: uppercase;">
+            <!-- Replace this with your chosen library name -->
+            LitShelf
+        </h1>
+    </a>
+</div>
+
         <div class="header-right">
             <div class="user-info-dropdown">
                 <div class="dropdown">
                     <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-                        <span class="user-name">Your Profile</span>
+                        <span class="user-name padding-right: 20px; padding-bottom: 20px;">Your Profile</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
                         <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
-                        <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
-                        <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
                         <a class="dropdown-item" href="login.html"><i class="dw dw-logout"></i> Log Out</a>
                     </div>
                 </div>
@@ -174,6 +229,7 @@
 					<div class="col-md-4">
                         <img src= "{% static 'vendors/images/banner-img.png' %}" alt="">
                     </div>
+					<div class="col-md-8">
 						<h4 class="font-20 weight-500 mb-10 text-capitalize">
                             Welcome back <div class="weight-600 font-30 text-blue">{{ user.username }}</div>
                         </h4>
@@ -182,6 +238,7 @@
 				</div>
 			</div>
 
+            <!-- Book Upload Form -->
             <div class="card-box">
                 <h3>Upload Your Book</h3>
                 <form method="POST" enctype="multipart/form-data" action="">
@@ -217,23 +274,42 @@
                 </form>
             </div>
             
-			<!-- Footer -->
-			<div class="footer-wrap pd-20 mb-20 card-box">
-				DeskApp - Bootstrap 4 Admin Template By <a href="https://github.com/dropways" target="_blank">Ankit Hingarajiya</a>
-			</div>
-		</div>
-	</div>
+            <!-- Section for displaying uploaded books -->
+            <div class="card-box">
+                <h3>Your Uploaded Books</h3>
+                {% if user.uploadedfile_set.all %}
+                    <ul class="book-list">
+                        {% for book in user.uploadedfile_set.all %}
+                            <li class="book-item">
+                                <div class="book-info">
+                                    <strong class="book-title">{{ book.title }}</strong> - 
+                                    <span class="book-description">{{ book.description }}</span>
+                                </div>
+                                <div class="book-meta">
+                                    <span class="book-visibility">Visibility: {{ book.visibility|title }}</span>
+                                    <span class="book-file">
+                                        <strong>File:</strong> <a href="{{ book.file.url }}" target="_blank">{{ book.file.url|slice:"-3" }}</a>
+                                    </span>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="no-books">No books uploaded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-    <!-- JS Files -->
+    <!-- Footer -->
+    <div class="footer-wrap">
+        <p>© 2025 Your Application. All Rights Reserved.</p>
+    </div>
+
+    <!-- JavaScript -->
     <script src="{% static 'vendors/scripts/core.js' %}"></script>
     <script src="{% static 'vendors/scripts/script.min.js' %}"></script>
     <script src="{% static 'vendors/scripts/process.js' %}"></script>
     <script src="{% static 'vendors/scripts/layout-settings.js' %}"></script>
-    <script src="{% static 'src/plugins/apexcharts/apexcharts.min.js' %}"></script>
-    <script src="{% static 'src/plugins/datatables/js/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'src/plugins/datatables/js/dataTables.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'src/plugins/datatables/js/dataTables.responsive.min.js' %}"></script>
-    <script src="{% static 'src/plugins/datatables/js/responsive.bootstrap4.min.js' %}"></script>
-    <script src="{% static 'vendors/scripts/dashboard.js' %}"></script>
 </body>
 </html>
